@@ -1,6 +1,5 @@
 import numpy as np
-import scipy
-
+from numpy import mean
 from rnglib.dlscore import score as default_score
 
 ai = lambda l: np.array(l, dtype='i')
@@ -39,4 +38,4 @@ class model(object):
 
     def stat(self, target):
         r = self.predict(target)
-        return scipy.mean(r), r.count(0) / len(r)
+        return mean(r), r.count(0) / len(r)

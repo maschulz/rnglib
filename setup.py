@@ -9,5 +9,6 @@ setup(
     author_email='marc.schulz@rwth-aachen.de',
     description='Tools for analyzing human-generated random number sequences',
     packages=['rnglib'],
-    ext_modules=cythonize(Extension('rnglib.dlscore', ["rnglib/dlscore.pyx"]), )
+    ext_modules=cythonize(Extension('rnglib.dlscore', ["rnglib/dlscore.pyx"]), ),
+    requires=['numpy', 'cython']
 )
