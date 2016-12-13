@@ -26,7 +26,7 @@ def progress(iterator, name=""):
             remaining_time = "?:?:?"
 
         sys.stdout.write(
-            "%s[%s%s] %i/%i %s \r" % (name, "#" * done, "." * (size - done), iteration, length, remaining_time))
+            "\r%s[%s%s] %i/%i %s" % (name, "#" * done, "." * (size - done), iteration, length, remaining_time))
         sys.stdout.flush()
 
     update(0)
