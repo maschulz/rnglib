@@ -1,6 +1,6 @@
 from cython import boundscheck, wraparound, cdivision
 from libc.stdlib cimport malloc, free
-from numpy import empty
+from numpy import empty, diff
 
 
 @boundscheck(False)
@@ -51,11 +51,12 @@ cpdef float score(int[:] pattern, int[:] sequence, int c_sub=1, int c_ins=1, int
 
 from numpy import array, fromiter
 from itertools import product
-def iter_scores(sequence, n, c_sub=1, c_ins=1, c_del=1, c_trans=1):
+def iter_scores(sequence, n, c_sub=1, c_ins=1, c_del=1, c_trans=1, repeats=True):
     sequence=array(sequence, dtype='i')
     for pattern in product(range(9), repeat=n):
         pattern=array(pattern, dtype='i')
-        yield score(pattern,sequence, c_sub,  c_ins, c_del, c_trans)
+        if repeats or not 0 in diff(pattern):
+            yield score(pattern,sequence, c_sub,  c_ins, c_del, c_trans)
 
-def array_scores(sequence, n, c_sub=1, c_ins=1, c_del=1, c_trans=1):
-    return fromiter(iter_scores(sequence, n, c_sub,  c_ins, c_del, c_trans), dtype='f')
+def array_scores(sequence, n, c_sub=1, c_ins=1, c_del=1, c_trans=1, repeats=True):
+    return fromiter(iter_scores(sequence, n, c_sub,  c_ins, c_del, c_trans, repeats), dtype='f')
