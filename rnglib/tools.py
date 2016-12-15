@@ -1,7 +1,7 @@
 import sys
 import time
 
-from numpy import mean, diff
+from numpy import mean, diff, std, sqrt
 
 
 def sec_to_str(seconds):
