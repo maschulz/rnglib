@@ -1,8 +1,6 @@
 import sys
 import time
 
-from numpy import mean, diff, std, sqrt
-
 
 def sec_to_str(seconds):
     m, s = divmod(seconds, 60)
@@ -38,8 +36,21 @@ def progress(iterator, name=""):
     sys.stdout.flush()
 
 
-def cohensd(x, y):
+from numpy import mean, diff, std, sqrt
+
+
+def cohens_d(x, y):
     nx = len(x)
     ny = len(y)
     dof = nx + ny - 2
     return (mean(x) - mean(y)) / sqrt(((nx - 1) * std(x, ddof=1) ** 2 + (ny - 1) * std(y, ddof=1) ** 2) / dof)
+
+
+def effect_size(classes, scores, ref_class=1):
+    sa, di = [], []
+    for i, j in zip(classes, scores):
+        if i == ref_class:
+            sa.append(j)
+        else:
+            di.append(j)
+    return cohens_d(sa, di)
