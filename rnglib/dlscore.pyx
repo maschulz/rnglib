@@ -7,6 +7,11 @@ from numpy import empty, diff
 @wraparound(False)
 @cdivision(True)
 cpdef int[:] align(int[:] pattern, int[:] sequence, int c_sub=1, int c_ins=1, int c_del=1, int c_trans=1):
+    """
+    damerau-levenshtein sequence alignment
+
+    :return: array[int] - array of edit distances
+    """
     cdef int i, j, cost, s_i, t_j, above, left, diag
 
     cdef int n=pattern.shape[0]+1
@@ -41,6 +46,11 @@ cpdef int[:] align(int[:] pattern, int[:] sequence, int c_sub=1, int c_ins=1, in
 @wraparound(False)
 @cdivision(True)
 cpdef float score(int[:] pattern, int[:] sequence, int c_sub=1, int c_ins=1, int c_del=1, int c_trans=1):
+    """
+    convert alignment to score
+
+    :return: float - pattern-score
+    """
     cdef int[:] alignment=align(pattern, sequence, c_sub,  c_ins, c_del, c_trans)
     cdef int l = alignment.shape[0]
     cdef float res=0
@@ -49,14 +59,32 @@ cpdef float score(int[:] pattern, int[:] sequence, int c_sub=1, int c_ins=1, int
         res+=1./(alignment[i]+1)
     return res/l
 
+
 from numpy import array, fromiter
 from itertools import product
 def iter_scores(sequence, n, c_sub=1, c_ins=1, c_del=1, c_trans=1, repeats=True):
+    """
+    return scores of length-n patterns as iterator
+
+    :param sequence: list of int
+    :param n: int - pattern length
+    :param repeats: bool - allow repeats?
+    :return: iterator[float] - scores of length-n patterns as iterator
+    """
     sequence=array(sequence, dtype='i')
     for pattern in product(range(9), repeat=n):
         pattern=array(pattern, dtype='i')
         if repeats or not 0 in diff(pattern):
             yield score(pattern,sequence, c_sub,  c_ins, c_del, c_trans)
 
+
 def array_scores(sequence, n, c_sub=1, c_ins=1, c_del=1, c_trans=1, repeats=True):
+    """
+    return scores of length-n patterns as array
+
+    :param sequence: list of int
+    :param n: int - pattern length
+    :param repeats: bool - allow repeats?
+    :return: array[float] - scores of length-n patterns as array
+    """
     return fromiter(iter_scores(sequence, n, c_sub,  c_ins, c_del, c_trans, repeats), dtype='f')
