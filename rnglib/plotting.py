@@ -16,7 +16,7 @@ def plot_roc(data):
         roc_auc = roc_auc_score(classes, predictions)
 
         plt.plot(fpr, tpr,
-                 lw=lw, label='%s (area = %0.2f)' % (name, roc_auc))
+                 lw=lw, label='%s (area = %0.3f)' % (name, roc_auc))
     plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
     plt.xlim([0.0, 1.0])
     plt.ylim([0.0, 1.05])
