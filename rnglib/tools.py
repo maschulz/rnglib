@@ -8,7 +8,9 @@ def sec_to_str(seconds):
     return "%d:%02d:%02d" % (h, m, s)
 
 
-def progress(iterator, name=""):
+def progress(iterator, verbose=True, name=""):
+    if not verbose: return iterator
+    
     length = len(iterator)
     size = 50
     timer = []
@@ -36,7 +38,7 @@ def progress(iterator, name=""):
     sys.stdout.flush()
 
 
-from numpy import mean, diff, std, sqrt
+from numpy import mean, diff, std, sqrt, asarray, arange, tri
 
 
 def cohens_d(x, y):
@@ -54,3 +56,23 @@ def effect_size(classes, scores, ref_class=1):
         else:
             di.append(j)
     return cohens_d(sa, di)
+
+
+def jackknife(data, func, verbose=False):
+    """
+    perform jackknife estimation of function on data set
+
+    :param data: list of samples
+    :param func: function that operates on list of samples and returns one or more values
+    :param verbose: show progress bar
+    :return: returns estimation and standard error
+    """
+    data = asarray(data)
+    N = len(data)
+    r = []
+    idx = arange(1, N) - tri(N, N - 1, -1).astype('int')
+    for i in progress(idx, verbose):
+        r.append(func(data[i]))
+    mu = mean(r, 0)
+    se = sqrt((N - 1) / N * sum((asarray(r) - mu) ** 2, 0))
+    return mu, se
