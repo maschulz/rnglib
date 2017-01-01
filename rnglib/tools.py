@@ -23,8 +23,10 @@ def progress(iterator, verbose=True, name=""):
     :param name: str - prefix the progress bar with a name / description
     :return: iterator
     """
-    if not verbose: return iterator
-    
+    if not verbose:
+        for item in iterator:
+            yield item
+
     length = len(iterator)
     size = 50
     timer = []
