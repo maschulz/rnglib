@@ -9,6 +9,20 @@ def sec_to_str(seconds):
 
 
 def progress(iterator, verbose=True, name=""):
+    """
+    progress bar wrapper for iterators
+
+    used like this:
+    >>> for i in progress(range(10)):
+    >>>     sleep(1)
+    >>>
+    >>> [##################################################] 10/10 0:00:00
+
+    :param iterator: iterator - needs to have len and next implemented
+    :param verbose: bool - show progress bar?
+    :param name: str - prefix the progress bar with a name / description
+    :return: iterator
+    """
     if not verbose: return iterator
     
     length = len(iterator)
@@ -42,6 +56,13 @@ from numpy import mean, diff, std, sqrt, asarray, arange, tri
 
 
 def cohens_d(x, y):
+    """
+    return cohens d
+
+    :param x: list[float]
+    :param y: list[float]
+    :return: float
+    """
     nx = len(x)
     ny = len(y)
     dof = nx + ny - 2
@@ -49,6 +70,14 @@ def cohens_d(x, y):
 
 
 def effect_size(classes, scores, ref_class=1):
+    """
+    one-verus-rest effect size (cohens d)
+
+    :param classes: int/str - list of class labels
+    :param scores: float - list of samples
+    :param ref_class: int/str - class to test
+    :return: float - cohens d
+    """
     sa, di = [], []
     for i, j in zip(classes, scores):
         if i == ref_class:
