@@ -1,6 +1,8 @@
+from itertools import product
 from cython import boundscheck, wraparound, cdivision
 from libc.stdlib cimport malloc, free
-from numpy import empty, diff
+from numpy import array, fromiter, empty, diff
+
 
 
 @boundscheck(False)
@@ -42,6 +44,7 @@ cpdef int[:] align(int[:] pattern, int[:] sequence, int c_sub=1, int c_ins=1, in
 
     return res
 
+
 @boundscheck(False)
 @wraparound(False)
 @cdivision(True)
@@ -60,8 +63,6 @@ cpdef float score(int[:] pattern, int[:] sequence, int c_sub=1, int c_ins=1, int
     return res/l
 
 
-from numpy import array, fromiter
-from itertools import product
 def iter_scores(sequence, n, c_sub=1, c_ins=1, c_del=1, c_trans=1, repeats=True):
     """
     return scores of length-n patterns as iterator
